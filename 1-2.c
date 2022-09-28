@@ -7,5 +7,4 @@ int main(){
     printf("Item\tUnit\tPurchase\n");
     printf("\tPrice\tDate\n");
     printf("%d\t$%.2f\t%02d\\%02d\\%04d",a,b,c,d,e);
-
 }
