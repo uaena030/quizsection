@@ -11,7 +11,7 @@ int main(){
             printf("\n");
         }
     }
-    for(int i=0; i<16; i = i+4){
+    for(int i=0; i<16; i+=4){
         printf("%d\t",a[i]+a[i+1]+a[i+2]+a[i+3]);
     }
     printf("\n");
