@@ -6,7 +6,7 @@ int main(){
     printf("%03d\n",a);
     printf("%03d\n",b);
     printf("%03d\n",c);
-    printf("%d\n",d);
+    printf("%03d\n",d);
     printf("%03d\n",e);
     return 0;
 }
