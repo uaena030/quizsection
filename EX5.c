@@ -1,11 +1,11 @@
 #include <stdio.h>
 
 int main(){
-    int play,dollars = 0,minutes = 15,price = 30,isc = 50,ipc = 100,action,dollarslast = dollars,ct;
+    int play,dollars = 100,minutes = 15,price = 30,isc = 50,ipc = 100,action,dollarsum = 0,ct;
     printf("Welcome, young boss!\n");
     while(1){
         printf("Chop chop, It's dawn.\n");
-        for(int i=0; i<4; i++){
+        for(int i=1; i<=4; i++){
             printf("You are at Area %d.\n",i);
             printf("You have %d dollars.\n",dollars);
             printf("You need %d minutes to make a hotdog.\n",minutes);
@@ -22,6 +22,8 @@ int main(){
                     sellhotdog:
                     printf("You make %d hotdogs here!\n",180/minutes);
                     printf("You earn $%d!\n",(180/minutes)*price);
+                    dollars += (180/minutes)*price;
+                    dollarsum += (180/minutes)*price;
                     break;
                 case 2:
                     if(dollars<isc){
@@ -66,13 +68,13 @@ int main(){
 
 
         }
-        printf("Well done, you earn $%d today.",dollars - dollarslast);
-        dollarslast = dollars;
+        printf("Well done, you earn $%d today.\n",dollarsum);
+        dollarsum = 0;
         ctagain:
         printf("Do you want to continue or exit?\n");
         printf("\t[1] Continue\n");
-        printf("\t[2] Exit");
-        printf("Enter the number:");
+        printf("\t[2] Exit\n");
+        printf("Enter the number:\n");
         scanf("%d",&ct);
         if(ct == 1){
             continue;
@@ -82,7 +84,7 @@ int main(){
             return 0;
         }
         else{
-            printf("Invalid input!!!!");
+            printf("Invalid input!!!!\n");
             goto ctagain;
         }
 
