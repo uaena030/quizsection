@@ -11,7 +11,6 @@ int main(){
             lsum++;
             if(!b){
                 lsum--;
-                printf("minus");
             }
             b = 0;
         }
@@ -22,5 +21,5 @@ int main(){
             }
         }
     }
-    printf("%d %d",vsum,lsum);
+    printf("%d %d",vsum,lsum+1);
 }
