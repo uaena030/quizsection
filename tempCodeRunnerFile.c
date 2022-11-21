@@ -1,48 +1,53 @@
-#include <stdio.h>
-#include <ctype.h>
+#include <stdio,h>
 
 int main(){
-    char i,a,A;
-    int bytescount = 0,lowercount = 0,uppercount = 0,dcount = 0,wcount = 0,linecount = 0;
-    int alph[26],alphsum = 0;
-    float rate;
-    for(int i = 0;i<26;i++){
-        alph[i] = 0;
-    }
-    while((i = getchar()) != EOF){
-        bytescount += 1;
-        if(i == '\n'){
-            lincount += 1;
-        }
-        else if(i == ' '){
-            wcount += 1;
-        }
-        else if(i <= 'Z' && i >= 'A'){
-            alph[i - 'A'] += 1;
-            uppercount += 1;
-        }
-        else if(i <= 'a' && i >= 'z'){
-            alph[i - 'a'] += 1;
-            lowercount += 1;
-        }
-        else if(i >= '0' && i <= '9'){
-            dcount += 1;
+    int n=3,lotteryuse = 0,lottery[100][100],freechoice = 0,lotteryprice = 500,lottertype,temp;
+    for(int i = 0;i < n; i++){
+        for(int j = 0;j < n; j++){
+            lottery[i][j] = 1;
         }
     }
-    printf("Bytes Count: %d\n",bytescount);
-    printf("Lowercase Count: %d\n",lowercount);
-    printf("Uppercase Count: %d\n",uppercount);
-    printf("Digit Count: %d\n",digitcount);
-    printf("Whitespace Count: %d\n",wcount);
-    printf("Line Count: %d\n",linecount);
-    for(i=0; i<26; i++){
-        alphsum += alph[i];
-    }
-    for(i = 0; i <26;i++){
-        A = 'A' + i;
-        a = tolower(a);
-        rate = alph[i]/alphsum;
-        printf("%c/%c: %d,%d",a,A,alph[i],rate);
-    }
-}
+    end:
+        printf("Do you want to continue or exit?\n");
+        printf("  [1] Continue\n");
+        printf("  [2] Exit\n");
+        printf("Enter the number(s): \n");
+        scanf("%d",&temp);
+        switch (temp){
+            case 1:
+                printf("You get one free choice.\n");
+                freechoice = 1;
+                break;
+            case 2:
+                printf("We will miss you. Bye!\n");
+                return 0;
+            default:
+                printf("Invalid input!!!!\n");
+                goto end;
+        }
 
+        for (int i = 0; i < n; i++){
+            printf("+");
+            for (int j = 0; j < n; j++){
+                for (int k = 0; k < 4; k++) printf("-");
+                printf("+");
+            }
+            printf("\n|");
+            for (int j = 0; j < n; j++){
+                if (lottery[i][j] == 0){
+                    printf("  %c |",'x');
+                } 
+                else{
+                    printf("  %d |", n*i+j+1);
+                }
+            }
+            printf("\n");
+        }
+        printf("You can choose\n");
+        freechoice? printf("  [number on cell] to open (- $0)\n"):printf("  [number on cell] to open (- $%d)\n", lotteryprice);
+        printf("  [0] to continue the game\n");
+        printf("Enter the number(s): \n");
+        scanf("%d",&temp);
+    }
+    
+}
