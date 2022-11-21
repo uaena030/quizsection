@@ -2,7 +2,7 @@
 
 int main(){
     int price = 30,dollar = 100;
-    int n=3,lottery[100][100],freechoice = 0,lotteryprice = 500,lottertype,temp,temp2,lotterynspace = 0;
+    int n=3,lottery[100][100],freechoice = 0,lotteryprice = 500,temp,temp2,lotterynspace = 0;
     int lotterynumber,cell;
     int speedbooster = 0,pricebooster = 0,areabooster = 0;
     int refresh = 0;
