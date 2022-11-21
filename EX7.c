@@ -38,12 +38,14 @@ int booster(int *s,int *p, int *a){ // booster choose function
 
 
 int  main(){
-    int dollars = 100,minutes = 15,price = 30,isc = 50,ipc = 100,action,dollarsum = 0,temp; // orgin
+    int dollars = 100,minutes = 15,price = 30,isc = 50,ipc = 100,dollarsum = 0,temp,temp2; // orgin
     int speedbooster = 0,pricebooster = 0,areabooster = 0; // boost count
     int speedboosteropen = 0,priceboosteropen = 0,areaboosteropen = 0; // boost open close
-    int area[5] = {0}, areainvalid = 0; //check area
+    int area[5] = {0}; //check area
     int areasitutaion[6];
-    int n=5,lotteryuse = 0,lottery[100][100],freechoice = 0,lotteryprice = 500,lotterynspace = 0;
+    int n=3,lottery[100][100],freechoice = 0,lotteryprice = 500,lotterynspace = 0;
+    int lotterynumber,cell;
+    int refresh = 0;
     for(int i = 0;i < n; i++){
         for(int j = 0;j < n; j++){
             lottery[i][j] = 1;
@@ -107,10 +109,9 @@ int  main(){
                 printf("  [1] Sell the hotdogs\n");
                 printf("  [2] Improve your cooking speed\n");
                 printf("  [3] Improve your hotdog flavor\n");
-                printf("Enter the number(s): \n");
+                printf("Enter the number(s): ");
                 scanf("%d",&area[i]);
                 if(area[i] != 1 && area[i] != 2 && area[i] != 3){
-                    printf("Invalid input!!!!\n");
                     goto areachooseagain;
                 }
             }
@@ -188,8 +189,12 @@ int  main(){
         printf("  [3] Area 3\n");
         printf("  [4] Area 4\n");
         areaboosteropen?printf("  [5] Area 5\n  [6] Done\n"):printf("  [5] Done\n");
-        printf("Enter the number(s): \n");
+        printf("Enter the number(s): ");
         scanf("%d",&temp);
+        if(temp<0 || temp >6){
+            printf("Invalid input!!!!\n");
+            goto areacheckagain;
+        }
         switch (areasitutaion[temp-1]){
             case 0:
                 printf("You make %d hotdogs here!\n", (180/minutes)*(speedboosteropen?2:1));
@@ -236,7 +241,7 @@ int  main(){
         printf("Do you want to continue or exit?\n");
         printf("  [1] Continue\n");
         printf("  [2] Exit\n");
-        printf("Enter the number(s): \n");
+        printf("Enter the number(s): ");
         scanf("%d",&temp);
         switch (temp){
             case 1:
@@ -250,6 +255,25 @@ int  main(){
                 printf("Invalid input!!!!\n");
                 goto end;
         }
+        lotteryagain:
+        refresh = 1;
+        for(int i = 0; i < n; i++){
+            for(int j = 0; j < n ; j++){
+                if(lottery[i][j] != 0){
+                    refresh = 0;
+                }
+            }
+        }
+        if(refresh == 1){
+            lotteryprice = 500;
+            n += 2;
+            for(int i = 0; i < n; i++){
+                for(int j = 0; j < n ; j++){
+                    lottery[i][j] = 1;
+                }
+            }
+        }
+        lotterynspace = 0;
         for(int i = n*n; i>0;i /= 10){
             lotterynspace ++;
         }
@@ -276,11 +300,142 @@ int  main(){
             printf("+");
         }
         printf("\n");
-        printf("\nYou can choose\n");
+        printf("You can choose\n");
         freechoice? printf("  [number on cell] to open (- $0)\n"):printf("  [number on cell] to open (- $%d)\n", lotteryprice);
         printf("  [0] to continue the game\n");
-        printf("Enter the number(s): \n");
+        printf("Enter the number(s): ");
         scanf("%d",&temp);
+        if(temp == 0){
+            continue; // 改成跳出
+        }
+        if(temp <= 0 || temp > n*n){
+            printf("Invalid input!!!!\n");
+            goto lotteryagain;
+        }
+        if(lottery[(temp-1)/n][(temp-1)%n] == 0){
+            printf("Invalid input!!!!\n");
+            goto lotteryagain;
+        }
+        if(freechoice == 0 && dollars < lotteryprice){
+            printf("You have no money!\n");
+            continue; // 記得改成新的一天
+        }
+        else if(freechoice > 0){
+            freechoice -= 1;
+        }
+        else{
+            dollars -= lotteryprice;
+            lotteryprice +=500;
+        }
+        extrachoice:
+        lottery[(temp-1)/n][(temp-1)%n] = 0;
+        cell = temp;
+        lotterynumber = 0;
+        while(temp != 0){
+            lotterynumber = lotterynumber*10 + temp%10;
+            temp /= 10;
+        }
+        temp = lotterynumber;
+        lotterynumber = 0;
+        for(int i = 0;temp != 0;i++){
+            temp2 = temp%10;
+            for(int j = 0;j < i;j++){
+                temp2 *= 16;
+            }
+            temp /=10 ;
+            lotterynumber += temp2;
+        }
+        lotterynumber %= 9;
+        lotterynumber += 1;
+        temp = cell;
+        switch(lotterynumber){
+            case 1:
+                printf("Fortune, fortune! You get $%d!\n", price*100);
+                dollars += price*100;
+                goto lotteryagain;
+            case 2:
+                printf("You get an extra choice!\n");
+                freechoice += 1;
+                goto lotteryagain;
+            case 3:
+                if((temp - 1)/n == 0){
+                    temp2 = n-1;
+                }
+                else{
+                    temp2 = (temp-1)/n - 1;
+                }
+                if(lottery[temp2][(temp-1)%n] == 0){
+                    printf("Bad Luck :(\n");
+                }
+                else{
+                    temp = temp2*n + 1 + (temp-1)%n;
+                    printf("Another open on %d!\n", temp);
+                    goto extrachoice;
+                }
+                goto lotteryagain;
+            case 4:
+                if((temp - 1)/n == n-1){
+                    temp2 = 0;
+                }
+                else{
+                    temp2 = (temp-1)/n + 1;
+                }
+                if(lottery[temp2][(temp-1)%n] == 0){
+                    printf("Bad Luck :(\n");
+                }
+                else{
+                    temp = temp2*n + 1 + (temp-1)%n;
+                    printf("Another open on %d!\n", temp);
+                    goto extrachoice;
+                }
+                goto lotteryagain;
+            case 5:
+                if((temp - 1)%n == 0){
+                    temp2 = n-1;
+                }
+                else{
+                    temp2 = (temp-1)%n - 1;
+                }
+                if(lottery[(temp-1)/n][temp2] == 0){
+                    printf("Bad Luck :(\n");
+                }
+                else{
+                    temp = temp-1;
+                    printf("Another open on %d!\n", temp);
+                    goto extrachoice;
+                }
+                goto lotteryagain;
+            case 6:
+                if((temp + 1)%n == n-1){
+                    temp2 = 0;
+                }
+                else{
+                    temp2 = (temp-1)%n + 1;
+                }
+                if(lottery[(temp-1)/n][temp2] == 0){
+                    printf("Bad Luck :(\n");
+                }
+                else{
+                    temp = temp+1;
+                    printf("Another open on %d!\n", temp);
+                    goto extrachoice;
+                }
+                goto lotteryagain;
+            case 7:
+                printf("You get a booster!!\n");
+                speedbooster += 1;
+                goto lotteryagain;
+            case 8:
+                printf("You get a booster!!\n");
+                pricebooster += 1;
+                goto lotteryagain;
+            case 9:
+                printf("You get a booster!!\n");
+                areabooster +=1;
+                goto lotteryagain;
+        }
+
+        
     }
 
 
