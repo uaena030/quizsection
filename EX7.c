@@ -32,8 +32,8 @@ int booster(int *s,int *p, int *a){ // booster choose function
             return 0;
         default:
             return 2;
-        return 1;
     }
+    return 1;
 }
 
 
@@ -119,8 +119,8 @@ int  main(){
         for(int i=0;i<4;i++){
             switch (area[i]){
                 case 1:
-                    sellhotdog:
                     areasitutaion[i] = 0;
+                    sellhotdog:
                     dollars += (180/minutes)*price*(speedboosteropen?2:1)*(priceboosteropen?2:1);
                     dollarsum += (180/minutes)*price*(speedboosteropen?2:1)*(priceboosteropen?2:1);
                     if(speedboosteropen){
@@ -203,10 +203,14 @@ int  main(){
             case 1:
                 printf("Can't you tell how poor you are?\n");
                 printf("Go vending your hotdogs instead of thinking about self-improvement!\n");
+                printf("You make %d hotdogs here!\n", (180/minutes)*(speedboosteropen?2:1));
+                printf("You earn $%d!\n", (180/minutes)*price*(speedboosteropen?2:1)*(priceboosteropen?2:1));
                 goto areacheckagain;
             case 2:
                 printf("Do you want to travel through time?\n");
                 printf("GO WORK!!\n");
+                printf("You make %d hotdogs here!\n", (180/minutes)*(speedboosteropen?2:1));
+                printf("You earn $%d!\n", (180/minutes)*price*(speedboosteropen?2:1)*(priceboosteropen?2:1));
                 goto areacheckagain;
             case 3:
                 printf("You glimpse the secret of wind.\n");
@@ -246,7 +250,7 @@ int  main(){
         switch (temp){
             case 1:
                 printf("You get one free choice.\n");
-                freechoice = 1;
+                freechoice += 1;
                 break;
             case 2:
                 printf("We will miss you. Bye!\n");
@@ -400,13 +404,13 @@ int  main(){
                     printf("Bad Luck :(\n");
                 }
                 else{
-                    temp = temp-1;
+                    temp = ((temp-1)/n)*n + temp2 + 1;
                     printf("Another open on %d!\n", temp);
                     goto extrachoice;
                 }
                 goto lotteryagain;
             case 6:
-                if((temp + 1)%n == n-1){
+                if((temp - 1)%n == n-1){
                     temp2 = 0;
                 }
                 else{
@@ -416,7 +420,7 @@ int  main(){
                     printf("Bad Luck :(\n");
                 }
                 else{
-                    temp = temp+1;
+                    temp = ((temp-1)/n)*n + temp2 + 1;
                     printf("Another open on %d!\n", temp);
                     goto extrachoice;
                 }
