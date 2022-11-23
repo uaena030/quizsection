@@ -179,13 +179,13 @@ int main(){
                 printf("Bad Luck :(\n");
             }
             else{
-                temp = temp-1;
+                temp = ((temp-1)/n)*n + temp2 + 1;
                 printf("Another open on %d!\n", temp);
                 goto extrachoice;
             }
             goto lotteryagain;
         case 6:
-            if((temp + 1)%n == n-1){
+            if((temp - 1)%n == n-1){
                 temp2 = 0;
             }
             else{
@@ -195,7 +195,7 @@ int main(){
                 printf("Bad Luck :(\n");
             }
             else{
-                temp = temp+1;
+                temp = ((temp-1)/n)*n + temp2 + 1;
                 printf("Another open on %d!\n", temp);
                 goto extrachoice;
             }
@@ -212,6 +212,7 @@ int main(){
             printf("You get a booster!!\n");
             areabooster +=1;
             goto lotteryagain;
-    }
+     }       
+    
 
 }
