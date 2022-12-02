@@ -25,11 +25,11 @@ long long int Xi(long long int x,long long int y,long long int m){
     if(y == 1){
         return x%m;
     }
-    else if(y&2==0){
+    else if(y%2==0){
         return ((Xi(x,y/2,m)%m)*(Xi(x,y/2,m)%m))%m;
     }
     else{
-        return x*Xi(x,y-1,m)%m;
+        return ((x%m)*(Xi(x,y-1,m)%m))%m;
     }
 
     
