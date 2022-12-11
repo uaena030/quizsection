@@ -1,43 +1,64 @@
 #include <stdio.h>
-int gcd(int a,int b){
-    if(b == 0){
-        return a;
-    }
-    return gcd(b,a%b);
+void swap(int *x,int *y){
+    int temp = *x;
+    *x = *y;
+    *y = temp;
 }
-
 int main(){
-    int n,a,b,temp,check = 0;
-    scanf("%d",&n);
-    for(int i=0;i<n;i++){
-        scanf("%d %d",&a,&b);
-        check = 0;
-        if(a < b){
-            for(int j=0;j<=b-1;j++){
-                if((a*j)%b == 1){
-                    check = 1;
-                    printf("multiplicative inverse is %d\n",j);
-                    break;
-                }
-            }
-            if(check == 0){
-                printf("Inverse doesn't exist\n");
-            }
+    int msize,temp;
+    printf("What is the size of the matrix: ");
+    scanf("%d",&msize);
+    int matrix[msize][msize];
+    printf("Please enter the matrix: ");
+    for(int i=0; i<msize; i++){
+        for(int j=0; j<msize; j++){
+            scanf("%d",&matrix[i][j]);
         }
-        else if(a%b == 0){
-            printf("Inverse doesn't exist\n");
+    }
+    for(int i=0; i<msize; i++){
+        for(int j=i+1; j<msize; j++){
+            swap(&matrix[i][j], &matrix[j][i]);
         }
-        else{
-            for(int j=0;j<=b-1;j++){
-                if((a*j)%b == 1){
-                    check = 1;
-                    printf("multiplicative inverse is %d\n",j);
-                    break;
-                }
+    }
+    for(int i=0; i<msize; i++){
+        for(int j=0; j<msize/2; j++){
+            swap(&matrix[i][j], &matrix[i][msize-j-1]);
+        }
+    }
+    for(int i=0; i<msize; i++){
+        for(int j=0; j<msize; j++){
+            printf("%d ",matrix[i][j]);
+        }
+    }
+    printf("\n");
+    printf("Enter the number of input data: ");
+    scanf("%d",temp);
+    for(int i=0; i<temp; i++){
+        printf("What is the size of the matrix: ");
+        scanf("%d",msize);
+        int matrix[msize][msize];
+        for(int i=0; i<msize; i++){
+            for(int j=0; j<msize; j++){
+                scanf("%d",&matrix[i][j]);
             }
-
         }
 
 
     }
+    printf("Enter the number of input data: ");
+    scanf("%d",temp);
+    for(int i=0; i<temp; i++){
+        printf("the first matrix: ");
+
+        scanf("%d",msize);
+        for(int i=0; i<msize; i++){
+            for(int j=0; j<msize; j++){
+                scanf("%d",&matrix[i][j]);
+            }
+        }
+
+        
+    }
+    
+
 }
