@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 //----------------------------------------------------------------宣告
 int area[5] = {0};
 int areasitutaion[6];
@@ -9,7 +10,11 @@ int freechoice = 0;
 int n=3,lottery[100][100],lotteryprice = 500,lotterynspace = 0;
 int lotterynumber,cell;
 int temp,temp2;
+int boostersum,boosterqueue[15];
+int mapsituation[8][8],playerlocation;
+void mapinitialization();
 void begin();
+int beginbooster();
 int booster(int *s,int *p, int *a);
 void boosterchoose(int *speedboosteropen,int *priceboosteropen,int *areaboosteropen);
 void actions(int isc,int ipc);
@@ -19,13 +24,65 @@ void areacheck(int speedboosteropen,int priceboosteropen,int areaboosteropen);
 void end();
 int lotterybuild();
 int lotterychoose();
+void boosterjudge();
 //----------------------------------------------------------------函式
+void mapinitialization(){
+    for(int i = 0;i < 8; i++){
+        for(int j = 0;j < 8; j++){
+            mapsituation[i][j] = 0;
+        }
+    }
+    mapsituation[0][0] = 1; // 1 == P(player)
+    playerlocation = 0;
+    for(int i = 2;i <= 4; i++){
+        temp = rand()%64;
+        if(mapsituation[temp/8][temp%8]!=0){
+            i--;
+            continue;
+        }
+        mapsituation[temp/8][temp%8] = i; // 2 == M(Money) 3 == B(Booster) 4 == T(Task)
+    }
+}
 void begin(){
     printf("Chop chop, It's dawn.\n");
     printf("You have %d dollars.\n",dollars);
     printf("You need %d minutes to make a hotdog.\n",minutes);
     printf("The price of a hotdog is $%d.\n",price);
     printf("You have %d speed booster(s), %d price booster(s), %d area booster(s).\n",speedbooster,pricebooster,areabooster);
+    switch(boosterqueue[0]){
+        case 1:
+            printf("The oldest booster is speedbooster.");
+            break;
+        case 2:
+            printf("The oldest booster is pricebooster.");
+            break;
+        case 3:
+            printf("The oldest booster is areabooster.");
+            break;
+        default:
+            printf("You have no booster now.");
+    }
+}
+int beginbooster(){
+    int boostersum = rand()%11+5;
+    int temp;
+    for(int i=0;i<boostersum;i++){
+        temp = rand()%3+1;
+        switch (temp){
+            case 1:
+                speedbooster++;
+                boosterqueue[i] = 1;
+                break;
+            case 2:
+                pricebooster++;
+                boosterqueue[i] = 2;
+                break;
+            case 3:
+                areabooster++;
+                boosterqueue[i] = 3;
+                break;
+        }
+    }
 }
 int booster(int *s,int *p, int *a){ // booster choose function
     int i;
@@ -165,6 +222,16 @@ void actionsdo(int i,int speedboosteropen,int priceboosteropen,int areaboosterop
                 dollars += (180/minutes)*price*(speedboosteropen?2:1)*(priceboosteropen?2:1);
                 dollarsum += (180/minutes)*price*(speedboosteropen?2:1)*(priceboosteropen?2:1);
                 areabooster -= 1;
+                for(int i=0;i<boostersum;i++){
+                    if(boosterqueue[i] == 3){
+                        temp = i;
+                    }
+
+                }
+                for(int i=temp;i<boostersum-1;i++){
+                    boosterqueue[i] = boosterqueue[i+1];
+                }
+                boostersum--;
             }
     }
 }
@@ -335,23 +402,7 @@ int lotterybuild(){ // lotterybuild
 int lotterychoose(){ // do lottery choose
     lottery[(temp-1)/n][(temp-1)%n] = 0;
     cell = temp;
-    lotterynumber = 0;
-    while(temp != 0){
-        lotterynumber = lotterynumber*10 + temp%10;
-        temp /= 10;
-    }
-    temp = lotterynumber;
-    lotterynumber = 0;
-    for(int i = 0;temp != 0;i++){
-        temp2 = temp%10;
-        for(int j = 0;j < i;j++){
-            temp2 *= 16;
-        }
-        temp /=10 ;
-        lotterynumber += temp2;
-    }
-    lotterynumber %= 9;
-    lotterynumber += 1;
+    lotterynumber = rand()%9+1;
     temp = cell;
     switch(lotterynumber){
         case 1:
@@ -437,34 +488,119 @@ int lotterychoose(){ // do lottery choose
             lotterybuild();
             break;
         case 7:
-            printf("You get a booster!!\n");
+            printf("You get a speedbooster!!\n");
             speedbooster += 1;
+            boostersum++;
+            boosterjudge();
             lotterybuild();
             break;
         case 8:
-            printf("You get a booster!!\n");
+            printf("You get a pricebooster!!\n");
             pricebooster += 1;
+            boostersum++;
+            boosterjudge();
             lotterybuild();
             break;
         case 9:
-            printf("You get a booster!!\n");
+            printf("You get a areabooster!!\n");
             areabooster +=1;
+            boostersum++;
+            boosterjudge();
             lotterybuild();
             break;
     }
 }
+void boosterjudge(){
+    if(boostersum>15){
+        printf("Oops! Your boosters are too musch!");
+        boostersum--;
+        switch(boosterqueue[0]){
+            case 1:
+                printf("You lose a speedbooster!");
+                speedbooster--;
+                break;
+            case 2:
+                printf("You lose a pricebooster!");
+                pricebooster--;
+                break;
+            case 3:
+                printf("You lose a areabooster!");
+                areabooster--;
+                break;
+        }
+        for(int i=0; i<14;i++){
+            boosterqueue[i] = boosterqueue[i+1];
+        }
+    }
+
+}
+void mapsystem(){
+    for(int i=0; i<8; i++){
+        for(int j=0; j<8; j++){
+            switch(mapsituation[i][j]){
+                case 0:
+                    printf(". ");
+                    break;
+                case 1:
+                    printf("P ");
+                    break;
+                case 2:
+                    printf("M ");
+                    break;
+                case 3:
+                    printf("B ");
+                    break;
+                case 4:
+                    printf("T ");
+                    break;
+            }
+        }
+        printf("\n");
+    }
+    mapmoveinvalid:
+    printf("Every step cost $25.\n");
+    printf("  [1]up.\n");
+    printf("  [2]down.\n");
+    printf("  [3]left.\n");
+    printf("  [4]right.\n");
+    printf("  [5]quit.\n");
+    printf("Enter the number(s) if you want to move: ");
+    scanf("%d", &temp2);
+    switch (temp2){
+        case 1:
+            mapsystem();
+            break;
+        case 2:
+            mapsystem();
+            break;
+        case 3:
+            mapsystem();
+            break;
+        case 4:
+            mapsystem();
+            break;
+        case 5:
+            break;
+        default:
+            printf("Invalid input!\n");
+            goto mapmoveinvalid;
+    }
+}
 //----------------------------------------------------------------
 int  main(){
+    srand(time(NULL));
     int temp,temp2; // orgin
     int speedboosteropen = 0,priceboosteropen = 0,areaboosteropen = 0; // boost open close
-    for(int i = 0;i < n; i++){ //
+    for(int i = 0;i < n; i++){ //陣列初始化
         for(int j = 0;j < n; j++){
             lottery[i][j] = 1;
         }
     }
+    mapinitialization();
     printf("Welcome, young boss!\n");
     while(1){
         dollarsum = 0;
+        boostersum = beginbooster();
         begin();
         boosterchoose(&speedboosteropen,&priceboosteropen,&areaboosteropen);
         if(speedbooster == 0){
@@ -483,15 +619,36 @@ int  main(){
         if(speedboosteropen == 2){
             speedboosteropen = 1;
             speedbooster -= 1;
+            for(int i=0;i<boostersum;i++){
+                if(boosterqueue[i] == 1){
+                    temp = i;
+                }
+
+            }
+            for(int i=temp;i<boostersum-1;i++){
+                boosterqueue[i] = boosterqueue[i+1];
+            }
+            boostersum--;
         }
         if(priceboosteropen == 2){
             priceboosteropen = 1;
             pricebooster -= 1;
+            for(int i=0;i<boostersum;i++){
+                if(boosterqueue[i] == 2){
+                    temp = i;
+                }
+
+            }
+            for(int i=temp;i<boostersum-1;i++){
+                boosterqueue[i] = boosterqueue[i+1];
+            }
+            boostersum--;
         }
         areasitutaion[4] = 5;
         areasitutaion[5] = 6;
         printf("Well done, you earn $%d today.\n",dollarsum);
         areacheck(speedboosteropen,priceboosteropen,areaboosteropen);
+        mapsystem();
         end();
         lotterybuild();        
     }
